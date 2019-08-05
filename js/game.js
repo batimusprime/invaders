@@ -3,59 +3,68 @@ let targets = [];
 let shoots = [];
 let animation = [];
 let zArr = [];
+let dArr = [];
 
 //metrics
-var score = 0;
-var health = 400;
+let health = 400;
 let lives = 5;
 
 //number of targets
-var tarNum = 6;
+let tarNum = 6;
 
+//global obj variables
+
+let sprite;
+let enemy;
+let healthbar;
+let scorebox;
+let level;
+let player;
 //p5 preload function, runs once before load
 function preload(){
 
-    retroFont = loadFont('assets/BitPotion.ttf');
-    //background image
-    bg = loadImage('assets/bg.png');
+//font 
+retroFont = loadFont('assets/BitPotion.ttf');
 
-//TODO Rewrite to dynamic variable names, and generic files, get generic pics
-//loads all images and assigns them variables
-    weaponImg = loadImage("/assets/weapon_red_magic_staff.png");
-    imgThree = loadImage("/assets/shoot.png");
-
-    //zombies
-    zOne = loadImage("/assets/big_zombie_run_anim_f0.png");
-    zTwo = loadImage("/assets/big_zombie_run_anim_f1.png");
-    zThree = loadImage("/assets/big_zombie_run_anim_f2.png");
-    zFour = loadImage("/assets/big_zombie_run_anim_f3.png");
-
-    //demons
-    // zOne = loadImage("/assets/big_demon_run_anim_f0.png");
-    // zTwo = loadImage("/assets/big_demon_run_anim_f1.png");
-    // zThree = loadImage("/assets/big_demon_run_anim_f2.png");
-    // zFour = loadImage("/assets/big_demon_run_anim_f3.png");
+//background image
+bg = loadImage('assets/bg.png');
 
 
-    tarImg0 = loadImage('/assets/chest_full_open_anim_f0.png');
-    tarImg1 = loadImage('/assets/chest_full_open_anim_f1.png');
-    tarImg2 = loadImage('/assets/chest_full_open_anim_f2.png');
-    tarImg3 = loadImage('/assets/chest_full_open_anim_f3.png');
-    tarImg4 = loadImage('/assets/chest_full_open_anim_f4.png');
+weaponImg = loadImage("/assets/weapon_red_magic_staff.png");
+bullet = loadImage("/assets/shoot.png");
 
-    //sprite running images
-    runImg1 = loadImage('assets/wizzard_m_run_anim_f3.png');
-    runImg2 = loadImage('assets/wizzard_m_run_anim_f2.png');
-    runImg3 = loadImage('assets/wizzard_m_run_anim_f1.png');
+//zombies
+zOne = loadImage("/assets/big_zombie_run_anim_f0.png");
+zTwo = loadImage("/assets/big_zombie_run_anim_f1.png");
+zThree = loadImage("/assets/big_zombie_run_anim_f2.png");
+zFour = loadImage("/assets/big_zombie_run_anim_f3.png");
 
-    //health bar sprites
-    hOutline = loadImage('assets/health_bar_decoration.png');
+//demons
+dOne = loadImage("/assets/big_demon_run_anim_f0.png");
+dTwo = loadImage("/assets/big_demon_run_anim_f1.png");
+dThree = loadImage("/assets/big_demon_run_anim_f2.png");
+dFour = loadImage("/assets/big_demon_run_anim_f3.png");
 
-    hFill0 = loadImage('assets/health_bar_f0.png')
-    hFill1 = loadImage('assets/health_bar_f1.png')
-    hFill2 = loadImage('assets/health_bar_f2.png')
-    hFill3 = loadImage('assets/health_bar_f3.png')
-    hFill4 = loadImage('assets/health_bar_f4.png')
+
+tarImg0 = loadImage('/assets/chest_full_open_anim_f0.png');
+tarImg1 = loadImage('/assets/chest_full_open_anim_f1.png');
+tarImg2 = loadImage('/assets/chest_full_open_anim_f2.png');
+tarImg3 = loadImage('/assets/chest_full_open_anim_f3.png');
+tarImg4 = loadImage('/assets/chest_full_open_anim_f4.png');
+
+//sprite running images
+runImg1 = loadImage('assets/wizzard_m_run_anim_f3.png');
+runImg2 = loadImage('assets/wizzard_m_run_anim_f2.png');
+runImg3 = loadImage('assets/wizzard_m_run_anim_f1.png');
+
+//health bar sprites
+hOutline = loadImage('assets/health_bar_decoration.png');
+
+hFill0 = loadImage('assets/health_bar_f0.png')
+hFill1 = loadImage('assets/health_bar_f1.png')
+hFill2 = loadImage('assets/health_bar_f2.png')
+hFill3 = loadImage('assets/health_bar_f3.png')
+hFill4 = loadImage('assets/health_bar_f4.png')
 
 }
 
@@ -63,120 +72,62 @@ function setup(){
 
     createCanvas(700,600);
 
-    //TODO FInd a way to iterate over the array with time delay instead of this
-    animation.push(runImg1)
-    animation.push(runImg1)
-    animation.push(runImg1)
-    animation.push(runImg1)
-    animation.push(runImg1)
-    animation.push(runImg1)
+    hack();
 
-    animation.push(runImg2)
-    animation.push(runImg2)
-    animation.push(runImg2)
-    animation.push(runImg2)
-    animation.push(runImg2)
-    animation.push(runImg2)
-
-    animation.push(runImg3)
-    animation.push(runImg3)
-    animation.push(runImg3)
-    animation.push(runImg3)
-    animation.push(runImg3)
-    animation.push(runImg3)
-
- 
-    //creates new sprite
-    sprite = new Sprite();
-    
-    //creates new falling object
-    enemy = new Enemy();
-    
-    // creates target arrays
-    for (i = 0; i < tarNum; i++){
-        
-        //distribution of targets
-        targets[i] = new Target(width-100, (i * 75) + 80);
-    }; 
-
-//healthbar display
-healthbar = new Healthbar();
-//score display
-scorebox = new Scorebox();
-
- 
-        //TODO FInd a way to iterate over the array with time delay instead of this
-        zArr.push(zOne);
-        zArr.push(zOne);
-        zArr.push(zOne);
-        zArr.push(zOne);
-        zArr.push(zOne);
-        zArr.push(zOne);
-        zArr.push(zTwo);
-        zArr.push(zTwo);
-        zArr.push(zTwo);
-        zArr.push(zTwo);
-        zArr.push(zTwo);
-        zArr.push(zTwo);
-        zArr.push(zThree);
-        zArr.push(zThree);
-        zArr.push(zThree);
-        zArr.push(zThree);
-        zArr.push(zThree);
-        zArr.push(zThree);
-        zArr.push(zFour);
-        zArr.push(zFour);
-        zArr.push(zFour);
-        zArr.push(zFour);
-        zArr.push(zFour);
-        zArr.push(zFour);
-    console.log(zArr);
-
-    
+        level = new Level();
+        level.createObjs();
+        level.tarPop();
 };// End setup
 
 
 function draw(){
 
     background(bg);
-
-//shows sprite
-sprite.show();
-sprite.move();
-
-
+    
+    level.run();
 
 //shows falling object (at random point on Y axis) and calls update (to make it fall)
 for (k=0;k<4;k++){
-enemy.show(k);
-enemy.update();
+
+    enemy.show(k);
+
+    enemy.update();
+
 }
 //shows stats.js
 healthbar.show(lives);
 
 scorebox.show();
+scorebox.status('Go ' + player.name + '!');
 //displays remaining targets
 for (var i=0; i < targets.length; i++){
 targets[i].show();
 };  
 //TODO Refactor to create new levels automatically
 //creates array of projectiles, their coordinates are set in the keypress function
-if(score < (tarNum*100)){for (var i=0; i < shoots.length; i++){
+if(level.score < (tarNum*100)){for (var i=0; i < shoots.length; i++){
 
     shoots[i].show();
     shoots[i].move();
 
-    //hit detection
+    //hit detection target
 for (var j=0; j<targets.length; j++){
-if (shoots[i].hits(targets[j])){
-targets[j].shrink();
-shoots[i].gone();
-}; 
-};   
-};
-}else if(score >= (tarNum * 100)){
 
-//winner or level 2
+    if (shoots[i].hits(targets[j])){
+
+        targets[j].shrink();
+
+        shoots[i].gone();
+
+    }; 
+
+};   
+
+};
+
+}else if(level.score >= (tarNum * 100)){
+
+level.next();
 
 };
 for (var i=shoots.length-1; i>=0; i--){
@@ -187,30 +138,34 @@ shoots.splice(i,1);
 for (var i=targets.length-1; i>=0; i--){
 if (targets[i].toDelete){
 targets.splice(i,1);
-score += 100;
-console.log(score);
+level.score += 100;
 };
 };
 
 //once the health runs out, end game
 if (health <= 0){
-noLoop();
+
+    level.end();
 };
 
 };//End draw
 
 
-//controls for sprite
-//key released stops sprite from moving constantly
-function keyReleased(){
+
+//this function stops sprite from moving constantly
+// function keyReleased(){
     
-    if (key != ' '){
+//     if (key != UP_ARROW || DOWN_ARROW){
     
-        sprite.setDir(0);
+//         sprite.ydir = 0;
     
-    };
+//     };
     
-};
+// };
+
+/*
+CONTROLS
+*/
 
 //press spacebar to shoot
 function keyPressed(){
@@ -218,20 +173,57 @@ function keyPressed(){
     if (key === ' '){
 
         //create new object and push to array shoots
-        let shoot = new Shoot(10, sprite.y);
+        let shoot = new Shoot();
 
         shoots.push(shoot);
 
     }
+        //positively or negatively invcrement the sprite's y position based on user input
 
     if (keyCode === DOWN_ARROW){
 
-        sprite.setDir(1);
+        sprite.ydir = 1;
 
     } else if (keyCode === UP_ARROW){
 
-        sprite.setDir(-1);
+        sprite.ydir = -1;
 
     }
 
 };
+
+//this is the worst code I've ever writter
+
+function hack(){
+
+for (i=0;i<5;i++){
+
+    animation.push(runImg1);
+    zArr.push(zOne);
+    dArr.push(dOne);
+
+}
+for (j=0;j<5;j++){
+
+    animation.push(runImg2);
+    zArr.push(zTwo);
+    dArr.push(dTwo);
+
+}
+for (k=0;k<5;k++){
+
+    animation.push(runImg3);
+    zArr.push(zThree);
+    dArr.push(dThree);
+}
+
+for (l=0;l<5;l++){
+
+    zArr.push(zFour);
+    dArr.push(dFour);
+
+
+
+}
+
+}
